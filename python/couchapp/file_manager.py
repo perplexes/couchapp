@@ -106,6 +106,7 @@ class FileManager(object):
             db.append(_db)
         self.db = db
 
+    # Generates a CouchApp in app_dir
     @classmethod
     def generate_app(cls, app_dir):
         paths = ['app-template', '../../app-template']
@@ -125,10 +126,11 @@ class FileManager(object):
 
         cls.init(app_dir)
 
+    # Initializes the .couchapprc, usually called after generate
     @classmethod
     def init(cls, app_dir, db_url=''):
         if not os.path.isdir(app_dir):
-            print>>sys.stderr, "%s don't exist" % app_dir
+            print>>sys.stderr, "%s directory doesn't exist!" % app_dir
             return
         rc_file = '%s/.couchapprc' % app_dir
         if not os.path.isfile(rc_file):
@@ -142,8 +144,9 @@ class FileManager(object):
 
             write_json(rc_file, conf)
         else:
-            print>>sys.stderr, "couchapp already initialized"
+            print>>sys.stderr, "CouchApp already initialized in %s" % app_dir
 
+    # Loads the database URLs in the app's .couchapprc
     def load_metadata(self, app_dir):
         rc_file = os.path.join(app_dir, '.couchapprc')
         if os.path.isfile(rc_file):
@@ -151,6 +154,7 @@ class FileManager(object):
             return
         self.conf = {}
 
+    # Pushes the app specified to the CouchDB instance
     def push_app(self, app_dir, app_name, verbose=False, **kwargs):
         docid = '_design/%s' % app_name
 
